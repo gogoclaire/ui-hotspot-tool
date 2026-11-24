@@ -1131,8 +1131,15 @@
   <div class="hotspot-popover" id="hotspotPopover">
     <div class="hotspot-popover-title">热区设置</div>
     <div>
-      <label class="hotspot-popover-label" for="hotspotTargetSelect">点击后跳转到</label>
+      <label class="hotspot-popover-label" for="hotspotTargetSelect">跳转到</label>
       <select id="hotspotTargetSelect" class="hotspot-select"></select>
+    </div>
+    <div>
+      <label class="hotspot-popover-label" for="hotspotTriggerSelect">触发方式</label>
+      <select id="hotspotTriggerSelect" class="hotspot-select">
+        <option value="click">点击触发（默认）</option>
+        <option value="hover">悬停触发（鼠标移入即跳转）</option>
+      </select>
     </div>
     <div>
       <label class="hotspot-popover-label" for="hotspotLabelInput">备注标签（可选，仅编辑时显示）</label>
@@ -1491,7 +1498,7 @@
       return layer;
     }
 
-    function createHotspot(dc, { left, top, width, height, target = '', label = '' }) {
+    function createHotspot(dc, { left, top, width, height, target = '', label = '', trigger = 'click' }) {
       const layer = ensureLayer(dc);
       const box = document.createElement('div');
       box.className = 'hotspot-box';
@@ -1501,6 +1508,7 @@
       box.style.height = `${Math.round(height)}px`;
       box.dataset.targetId = target;
       box.dataset.label = label;
+      if (trigger === 'hover') box.dataset.trigger = 'hover';
       box.innerHTML = '<span class="hotspot-tag"></span><div class="hotspot-actions"><button type="button" class="hotspot-mini-btn" data-action="hs-edit">目标</button><button type="button" class="hotspot-mini-btn del" data-action="hs-del">×</button></div><span class="hotspot-resize-handle" title="拖动调整大小"></span>';
       layer.appendChild(box);
       updateTag(box);
@@ -1512,14 +1520,15 @@
       if (!tag) return;
       const label = (box.dataset.label || '').trim();
       const t = box.dataset.targetId;
+      const prefix = box.dataset.trigger === 'hover' ? '[悬停] ' : '';
       let text;
       let state = '';
-      if (!t) { text = label || '未设置跳转目标'; state = 'is-unset'; }
-      else if (t === BACK_ID) { text = label || '← 返回上一页'; }
+      if (!t) { text = prefix + (label || '未设置跳转目标'); state = 'is-unset'; }
+      else if (t === BACK_ID) { text = prefix + (label || '← 返回上一页'); }
       else {
         const v = findView(t, views);
         if (!v) { text = '⚠ 目标视图已删除'; state = 'is-broken'; }
-        else text = label ? `${label} → ${v.badge}` : `→ ${v.label}`;
+        else text = prefix + (label ? `${label} → ${v.badge}` : `→ ${v.label}`);
       }
       if (tag.textContent !== text) tag.textContent = text;
       ['is-unset', 'is-broken'].forEach((c) => {
@@ -1569,7 +1578,7 @@
     }
 
     function copyHotspot(box) {
-      hsClipboard = { ...hotspotRect(box), target: box.dataset.targetId || '', label: box.dataset.label || '', srcDc: box.closest('.dom-content') };
+      hsClipboard = { ...hotspotRect(box), target: box.dataset.targetId || '', label: box.dataset.label || '', trigger: box.dataset.trigger || 'click', srcDc: box.closest('.dom-content') };
     }
 
     function pasteHotspot(intoDc) {
@@ -1609,6 +1618,7 @@
     /* 热区配置浮窗 */
     const popEl = $('#hotspotPopover');
     const popSelect = $('#hotspotTargetSelect');
+    const popTrigger = $('#hotspotTriggerSelect');
     const popLabel = $('#hotspotLabelInput');
 
     function openPopover(box) {
@@ -1624,6 +1634,7 @@
         views.map((v) => `<option value="${esc(v.id)}">${esc(v.label)}${v.id === ownId ? '（当前视图）' : ''}</option>`).join('');
       popSelect.value = box.dataset.targetId || '';
       if (popSelect.value !== (box.dataset.targetId || '')) popSelect.value = '';
+      if (popTrigger) popTrigger.value = box.dataset.trigger === 'hover' ? 'hover' : 'click';
       popLabel.value = box.dataset.label || '';
 
       popEl.classList.add('open');
@@ -1648,6 +1659,14 @@
       popSelect.addEventListener('change', () => {
         if (!popBox) return;
         popBox.dataset.targetId = popSelect.value;
+        updateTag(popBox);
+      });
+    }
+    if (popTrigger) {
+      popTrigger.addEventListener('change', () => {
+        if (!popBox) return;
+        if (popTrigger.value === 'hover') popBox.dataset.trigger = 'hover';
+        else popBox.removeAttribute('data-trigger');
         updateTag(popBox);
       });
     }
@@ -2711,6 +2730,21 @@
 
       const dev = t.closest('.device');
       if (dev && (isViewing() || dev.id === 'demoDevice')) flashHints(dev);
+    });
+
+    document.addEventListener('mouseover', (e) => {
+      const t = e.target;
+      if (!(t instanceof Element)) return;
+      const box = t.closest('.hotspot-box[data-trigger="hover"]');
+      if (!box) return;
+      if (e.relatedTarget && e.relatedTarget instanceof Node && box.contains(e.relatedTarget)) return;
+      const device = box.closest('.device');
+      if (device && (isViewing() || device.id === 'demoDevice' || box.closest('.nav-screen'))) {
+        if (device._hoverLock) return;
+        device._hoverLock = true;
+        setTimeout(() => { device._hoverLock = false; }, 180);
+        navigate(device, box.dataset.targetId);
+      }
     });
 
     if (!IS_EXPORTED) {
