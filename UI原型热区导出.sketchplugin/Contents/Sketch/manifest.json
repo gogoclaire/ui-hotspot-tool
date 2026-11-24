@@ -1,0 +1,32 @@
+{
+  "name": "UI原型热区导出",
+  "description": "一键将 Sketch 选中画板及原型连线导出为可点击跳转的离线 HTML 原型（支持可编辑版与演示版）",
+  "author": "UI Hotspot Tool",
+  "version": "1.0.0",
+  "identifier": "com.uihotspot.sketch.exporter",
+  "compatibleVersion": 70,
+  "bundleVersion": 1,
+  "commands": [
+    {
+      "name": "导出为可编辑原型 HTML",
+      "identifier": "export-editable",
+      "shortcut": "cmd option shift e",
+      "script": "export.js",
+      "handler": "onExportEditable"
+    },
+    {
+      "name": "导出为演示版 HTML（直接点击浏览）",
+      "identifier": "export-preview",
+      "shortcut": "cmd option shift p",
+      "script": "export.js",
+      "handler": "onExportPreview"
+    }
+  ],
+  "menu": {
+    "title": "UI原型热区导出",
+    "items": [
+      "export-editable",
+      "export-preview"
+    ]
+  }
+}
