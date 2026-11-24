@@ -939,6 +939,10 @@
 
     .pill:hover { border-color: #d9534f; color: #d9534f; background: #fff8f8; }
     .pill i { color: #d9534f; font-style: normal; font-weight: bold; }
+    .pill-icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .pill-icon-img { width: 13px; height: 13px; object-fit: contain; display: block; border-radius: 2px; }
+    body:not(.is-viewing) .pill-icon { cursor: pointer; border-radius: 3px; }
+    body:not(.is-viewing) .pill-icon:hover { background: rgba(217, 83, 79, 0.14); outline: 1px dashed rgba(217, 83, 79, 0.65); }
 
     .input-box {
       background: #ffffff;
@@ -1253,10 +1257,10 @@
         <div class="dom-content">
           <div class="hotspot-layer"></div>
           <div class="quick-pills">
-            <div role="button" tabindex="0" class="pill" onclick="fillQuickPill(this, event)"><i>▣</i> <span class="pill-text" contenteditable="true" spellcheck="false">-</span></div>
-            <div role="button" tabindex="0" class="pill" onclick="fillQuickPill(this, event)"><i>¥</i> <span class="pill-text" contenteditable="true" spellcheck="false">-</span></div>
-            <div role="button" tabindex="0" class="pill" onclick="fillQuickPill(this, event)"><i>+</i> <span class="pill-text" contenteditable="true" spellcheck="false">-</span></div>
-            <div role="button" tabindex="0" class="pill" onclick="fillQuickPill(this, event)"><i>▦</i> <span class="pill-text" contenteditable="true" spellcheck="false">-</span></div>
+            <div role="button" tabindex="0" class="pill" onclick="fillQuickPill(this, event)"><i class="pill-icon" title="点击替换图标图片" onclick="replacePillIcon(this, event)">▣</i> <span class="pill-text" contenteditable="true" spellcheck="false">-</span></div>
+            <div role="button" tabindex="0" class="pill" onclick="fillQuickPill(this, event)"><i class="pill-icon" title="点击替换图标图片" onclick="replacePillIcon(this, event)">¥</i> <span class="pill-text" contenteditable="true" spellcheck="false">-</span></div>
+            <div role="button" tabindex="0" class="pill" onclick="fillQuickPill(this, event)"><i class="pill-icon" title="点击替换图标图片" onclick="replacePillIcon(this, event)">+</i> <span class="pill-text" contenteditable="true" spellcheck="false">-</span></div>
+            <div role="button" tabindex="0" class="pill" onclick="fillQuickPill(this, event)"><i class="pill-icon" title="点击替换图标图片" onclick="replacePillIcon(this, event)">▦</i> <span class="pill-text" contenteditable="true" spellcheck="false">-</span></div>
           </div>
           <div class="input-box">
             <input class="chat-input" type="text" placeholder="-" title="双击可修改提示文字" ondblclick="editInputPlaceholder(this)" onkeydown="handleInputKey(event, this)" />
@@ -2084,6 +2088,12 @@
         return;
       }
       const src = await readImage(files[0]);
+      if (t.kind === 'pillicon') {
+        setPillIconImage(t.el, src);
+        flashCard(t.card);
+        toast('已替换标签图标', { action: '撤销', onAction: undo });
+        return;
+      }
       if (t.kind === 'section') {
         applyImageToSection(t.el, src);
         toast('已替换该区域切图', { action: '撤销', onAction: undo });
@@ -2098,6 +2108,8 @@
     function resolveDropTarget(el, altKey) {
       const card = el && el.closest ? el.closest('#ov > .ov-item') : null;
       if (!card) return { kind: 'new' };
+      const pillIcon = el.closest('.pill-icon');
+      if (pillIcon && card.contains(pillIcon) && !pillIcon.closest('.nav-screen')) return { kind: 'pillicon', el: pillIcon, card };
       const sec = el.closest(SECTION_SEL);
       if (sec && card.contains(sec) && !sec.closest('.nav-screen')) {
         if (altKey && sec.classList.contains('chat-body')) return { kind: 'bglayer', el: sec, card };
@@ -2581,6 +2593,7 @@
 
       if (mode === 'preview') {
         body.className = 'exported-view is-viewing';
+        root.querySelectorAll('.pill-icon').forEach((el) => el.removeAttribute('title'));
         root.querySelectorAll(
           '.edit-only, #togglePreviewBtn, #hotspotPopover, #layerPanel, #addViewModal, #helpModal, #fileInput, #dropHint, #hotspotModeBanner, .body-mode-bar, .section-mode-bar, .composer-mode-bar, .hotspot-tag, .hotspot-actions, .hotspot-resize-handle'
         ).forEach((el) => el.remove());
@@ -2756,7 +2769,7 @@
       const hasFiles = (e) => Array.from(e.dataTransfer?.types || []).includes('Files');
 
       function setDropHighlight(t, count) {
-        const el = t.kind === 'section' || t.kind === 'bglayer' ? t.el : t.kind === 'screen' ? t.card.querySelector('.ov-frame') : null;
+        const el = t.kind === 'pillicon' || t.kind === 'section' || t.kind === 'bglayer' ? t.el : t.kind === 'screen' ? t.card.querySelector('.ov-frame') : null;
         if (el !== dropHl) {
           dropHl?.classList.remove('drop-hover');
           dropHl = el;
@@ -2767,6 +2780,7 @@
         const isBody = t.kind === 'section' && t.el.classList.contains('chat-body');
         dropHint.textContent =
           t.kind === 'new' ? `松开鼠标：用${n}新建视图` :
+          t.kind === 'pillicon' ? '松开鼠标：替换这个标签的图标' :
           t.kind === 'bglayer' ? `松开鼠标：添加为固定层（不随滚动，叠在顶层下方）` :
           t.kind === 'section' ? `松开鼠标：替换这个区域的切图${count > 1 ? '（其余图片新建为后续视图）' : ''}${isBody ? ' · 按住 ⌥ 改为添加固定层' : ''}` :
           `松开鼠标：整屏替换为设计图${count > 1 ? '（其余图片新建为后续视图）' : ''}`;
@@ -2971,8 +2985,22 @@
       appendMessageToContainer(domContent, chatBody, text);
     }
 
+    function setPillIconImage(iconEl, src) {
+      if (!iconEl) return;
+      iconEl.innerHTML = `<img class="pill-icon-img" src="${src}" alt="" draggable="false" />`;
+    }
+
+    function replacePillIcon(iconEl, ev) {
+      if (isViewing() || iconEl.closest('#demoDevice') || IS_EXPORTED || addingHotspot) return;
+      if (ev) { ev.preventDefault(); ev.stopPropagation(); }
+      pickImages(false, async (files) => {
+        setPillIconImage(iconEl, await readImage(files[0]));
+        toast('已替换标签图标', { action: '撤销', onAction: undo });
+      });
+    }
+
     function fillQuickPill(pillBtn, ev) {
-      if (!isViewing() && !pillBtn.closest('#demoDevice') && ev?.target?.closest('.pill-text')) return;
+      if (!isViewing() && !pillBtn.closest('#demoDevice') && ev?.target?.closest('.pill-text, .pill-icon')) return;
       const composer = pillBtn.closest('.composer');
       const input = composer?.querySelector('.chat-input');
       const label = pillBtn.querySelector('.pill-text')?.textContent.trim() || '';
