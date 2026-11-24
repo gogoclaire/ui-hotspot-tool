@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>零售AI助手 · UI 优化设计稿</title>
+  <title>标题名称</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -759,6 +759,19 @@
     .tab { font-size: 13px; padding: 4px 16px; border-radius: 8px; border: none; background: transparent; color: #646a73; cursor: pointer; transition: all 0.15s ease; }
     .tab:hover { color: #1f2329; }
     .tab.active { background-color: #ffffff; color: #1f2329; font-weight: 600; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06); }
+    body:not(.is-viewing) [contenteditable="true"]:not(#boardTitle):not(.ov-badge):not(.ov-name-editable):not(.ai-title-text) {
+      outline: none;
+      border-radius: 4px;
+      cursor: text;
+      transition: background 0.15s ease, box-shadow 0.15s ease;
+    }
+    body:not(.is-viewing) [contenteditable="true"]:not(#boardTitle):not(.ov-badge):not(.ov-name-editable):not(.ai-title-text):hover {
+      background: rgba(217, 83, 79, 0.08);
+    }
+    body:not(.is-viewing) [contenteditable="true"]:not(#boardTitle):not(.ov-badge):not(.ov-name-editable):not(.ai-title-text):focus {
+      background: #ffffff;
+      box-shadow: inset 0 0 0 1px #f5c2c0;
+    }
 
     /* 对话内容主体 */
     .body.chat-body {
@@ -1186,7 +1199,7 @@
           <button type="button" class="icon-btn back-nav-btn" title="返回" data-action="nav-back">‹</button>
           <button type="button" class="icon-btn" title="关闭">✕</button>
         </div>
-        <span class="ai-title-text" contenteditable="true" spellcheck="false">零售AI助手</span>
+        <span class="ai-title-text" contenteditable="true" spellcheck="false">标题名称</span>
         <button type="button" class="icon-btn" title="更多操作">···</button>
       </div>
 
@@ -1200,8 +1213,8 @@
           <div class="hotspot-layer"></div>
           <button type="button" class="tool-icon" title="历史记录">☰</button>
           <div class="tabs">
-            <button type="button" class="tab active" onclick="switchTab(this)">问答</button>
-            <button type="button" class="tab" onclick="switchTab(this)">客户</button>
+            <div role="button" tabindex="0" class="tab active" onclick="switchTab(this)"><span class="tab-text" contenteditable="true" spellcheck="false">标签1</span></div>
+            <div role="button" tabindex="0" class="tab" onclick="switchTab(this)"><span class="tab-text" contenteditable="true" spellcheck="false">标签2</span></div>
           </div>
           <button type="button" class="tool-icon new-chat-btn" title="新建对话">+</button>
         </div>
@@ -1215,19 +1228,19 @@
         </div>
         <div class="dom-content">
           <div class="hotspot-layer"></div>
-          <div class="timestamp" style="margin-bottom: 12px;">今天11:25</div>
-          <div class="welcome-text" style="margin-bottom: 14px;">
-           -<br />
+          <div class="timestamp" style="margin-bottom: 12px;" contenteditable="true" spellcheck="false">今天11:25</div>
+          <div class="welcome-text" style="margin-bottom: 14px;" contenteditable="true" spellcheck="false">
+            -<br />
             -
           </div>
-          <button type="button" class="prompt-card" style="margin-bottom: 10px;" onclick="sendPromptFromCard(this, '-')">
-            <span>-</span>
+          <div role="button" tabindex="0" class="prompt-card" style="margin-bottom: 10px;" onclick="sendPromptFromCard(this, event)">
+            <span class="prompt-text" contenteditable="true" spellcheck="false">-</span>
             <span class="enter-icon">→</span>
-          </button>
-          <button type="button" class="prompt-card" onclick="sendPromptFromCard(this, '-')">
-            <span>-</span>
+          </div>
+          <div role="button" tabindex="0" class="prompt-card" onclick="sendPromptFromCard(this, event)">
+            <span class="prompt-text" contenteditable="true" spellcheck="false">-</span>
             <span class="enter-icon">↳</span>
-          </button>
+          </div>
         </div>
       </div>
 
@@ -1240,19 +1253,19 @@
         <div class="dom-content">
           <div class="hotspot-layer"></div>
           <div class="quick-pills">
-            <button type="button" class="pill" onclick="fillQuickPill(this, '问产品：')"><i>▣</i> -</button>
-            <button type="button" class="pill" onclick="fillQuickPill(this, '问资配：')"><i>¥</i> -</button>
-            <button type="button" class="pill" onclick="fillQuickPill(this, '去添加：')"><i>+</i> -</button>
-            <button type="button" class="pill" onclick="fillQuickPill(this, '客户视图：')"><i>▦</i> -</button>
+            <div role="button" tabindex="0" class="pill" onclick="fillQuickPill(this, event)"><i>▣</i> <span class="pill-text" contenteditable="true" spellcheck="false">-</span></div>
+            <div role="button" tabindex="0" class="pill" onclick="fillQuickPill(this, event)"><i>¥</i> <span class="pill-text" contenteditable="true" spellcheck="false">-</span></div>
+            <div role="button" tabindex="0" class="pill" onclick="fillQuickPill(this, event)"><i>+</i> <span class="pill-text" contenteditable="true" spellcheck="false">-</span></div>
+            <div role="button" tabindex="0" class="pill" onclick="fillQuickPill(this, event)"><i>▦</i> <span class="pill-text" contenteditable="true" spellcheck="false">-</span></div>
           </div>
           <div class="input-box">
-            <input class="chat-input" type="text" placeholder="-" onkeydown="handleInputKey(event, this)" />
+            <input class="chat-input" type="text" placeholder="-" title="双击可修改提示文字" ondblclick="editInputPlaceholder(this)" onkeydown="handleInputKey(event, this)" />
             <div class="input-actions">
               <button type="button" class="circle-btn" title="语音输入">🎙</button>
               <button type="button" class="circle-btn send-btn" title="发送" onclick="submitComposerInput(this)">↑</button>
             </div>
           </div>
-          <div class="disclaimer">内容由AI大模型生成，仅供参考，请仔细甄别</div>
+          <div class="disclaimer" contenteditable="true" spellcheck="false">内容由AI生成，仅供参考</div>
         </div>
       </div>
     </div>
@@ -2377,6 +2390,7 @@
       closeLayerPanel();
       deselect();
       titleEl.textContent = st.title || titleEl.textContent;
+      document.title = titleEl.textContent.trim() || '标题名称';
       ov.innerHTML = detokenize(st.grid || '');
       refreshAllTags();
       mo.takeRecords();
@@ -2873,7 +2887,7 @@
       }
 
       if (typing) {
-        if (key === 'Enter' && e.target.matches && e.target.matches('.ov-badge, .ov-name-editable, #boardTitle, .ai-title-text')) {
+        if (key === 'Enter' && e.target.matches && e.target.matches('.ov-badge, .ov-name-editable, #boardTitle, .ai-title-text, .tab-text, .prompt-text, .pill-text, .timestamp, .disclaimer')) {
           e.preventDefault();
           e.target.blur();
         }
@@ -2948,17 +2962,27 @@
       tabBtn.classList.add('active');
     }
 
-    function sendPromptFromCard(cardBtn, questionText) {
+    function sendPromptFromCard(cardBtn, ev) {
+      if (!isViewing() && !cardBtn.closest('#demoDevice') && ev?.target?.closest('.prompt-text')) return;
       const chatBody = cardBtn.closest('.chat-body');
       if (!chatBody || chatBody.classList.contains('img-mode')) return;
+      const text = cardBtn.querySelector('.prompt-text')?.textContent.trim() || cardBtn.textContent.trim();
       const domContent = chatBody.querySelector('.dom-content') || chatBody;
-      appendMessageToContainer(domContent, chatBody, questionText);
+      appendMessageToContainer(domContent, chatBody, text);
     }
 
-    function fillQuickPill(pillBtn, prefix) {
+    function fillQuickPill(pillBtn, ev) {
+      if (!isViewing() && !pillBtn.closest('#demoDevice') && ev?.target?.closest('.pill-text')) return;
       const composer = pillBtn.closest('.composer');
       const input = composer?.querySelector('.chat-input');
-      if (input) { input.value = prefix; input.focus(); }
+      const label = pillBtn.querySelector('.pill-text')?.textContent.trim() || '';
+      if (input && label) { input.value = `${label}：`; input.focus(); }
+    }
+
+    function editInputPlaceholder(inp) {
+      if (isViewing() || inp.closest('#demoDevice') || IS_EXPORTED) return;
+      const v = prompt('修改输入框提示文字（placeholder）', inp.placeholder || '');
+      if (v !== null) inp.placeholder = v;
     }
 
     function submitComposerInput(sendBtn) {
@@ -3008,8 +3032,9 @@
       }
 
       if (!getCards().length) {
-        ov.appendChild(buildCard({ id: '01', badge: '01', name: '问答首页', type: 'home', screenHtml: TEMPLATE_HTML }));
+        ov.appendChild(buildCard({ id: '01', badge: '01', name: '首页', type: 'home', screenHtml: TEMPLATE_HTML }));
       }
+      titleEl.addEventListener('input', () => { document.title = titleEl.textContent.trim() || '标题名称'; });
       ensureLayerChips();
       refreshAllTags();
       BAKED_STATE = serializeState();
