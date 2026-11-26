@@ -112,7 +112,7 @@ function buildHotspotHtml(hs, isPreview) {
   );
 }
 
-function buildCardHtml(card, hotspotsHtml, imgDataUrl, isPreview) {
+function buildCardHtml(card, hotspotsHtml, imgDataUrl, isPreview, devW, devH) {
   var screenHtml =
     '<div class="screen screen-image" data-screen="image">' +
       '<div class="body chat-body img-mode">' +
@@ -140,7 +140,7 @@ function buildCardHtml(card, hotspotsHtml, imgDataUrl, isPreview) {
           '<button type="button" class="view-refresh-btn" data-action="view-demo" title="从此视图开始演示">▶</button>' +
         '</div>' +
       '</div>' +
-      '<div class="ov-frame"><div class="device">' + screenHtml + '</div></div>' +
+      '<div class="ov-frame"><div class="device" style="width: ' + devW + 'px; height: ' + devH + 'px;">' + screenHtml + '</div></div>' +
     '</div>'
   );
 }
@@ -197,7 +197,10 @@ function runExport(context, isPreview) {
     var imgDataUrl = 'data:image/png;base64,' + base64;
 
     var abW = (meta.ab.frame && meta.ab.frame.width) ? meta.ab.frame.width : 375;
-    var scale = DEVICE_W / abW;
+    var abH = (meta.ab.frame && meta.ab.frame.height) ? meta.ab.frame.height : 812;
+    var scale = abW <= 600 ? 0.9 : 0.75;
+    var devW = Math.max(120, Math.round(abW * scale));
+    var devH = Math.max(120, Math.round(abH * scale));
     var flows = [];
     collectFlowsInArtboard(meta.ab, 0, 0, scale, artboardIdToCardId, flows);
     hotspotCount += flows.length;
@@ -206,7 +209,7 @@ function runExport(context, isPreview) {
       return buildHotspotHtml(hs, isPreview);
     }).join('');
 
-    cardsHtml.push(buildCardHtml(meta, hsHtml, imgDataUrl, isPreview));
+    cardsHtml.push(buildCardHtml(meta, hsHtml, imgDataUrl, isPreview, devW, devH));
   }
 
   var html = template;
