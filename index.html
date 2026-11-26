@@ -264,7 +264,7 @@
 
     .device {
       width: 340px;
-      height: 710px;
+      height: 736px;
       background: #ffffff;
       border-radius: 36px;
       overflow: hidden;
@@ -476,6 +476,216 @@
 
     .hotspot-popover-footer { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 2px; }
     .hotspot-popover-footer .btn { padding: 5px 12px; font-size: 12px; }
+
+    /* 局部叠加图片层（预览/演示/编辑定位） */
+    .overlay-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 40;
+      pointer-events: none;
+    }
+
+    .overlay-backdrop {
+      position: absolute;
+      inset: 0;
+      pointer-events: auto;
+      background: transparent;
+    }
+
+    .overlay-img-wrap {
+      position: absolute;
+      pointer-events: auto;
+      animation: overlayIn 0.14s ease;
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .overlay-img-wrap.is-scrollable {
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .overlay-img-wrap.is-scrollable::-webkit-scrollbar { width: 4px; }
+    .overlay-img-wrap.is-scrollable::-webkit-scrollbar-thumb { background: rgba(15, 23, 42, 0.22); border-radius: 4px; }
+
+    .overlay-img-track {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .overlay-editor-box.editing-inner {
+      outline: 2px solid #9ca3af;
+      outline-offset: -2px;
+    }
+
+    .overlay-editor-box.editing-inner .overlay-img-track {
+      outline: 2px dashed #059669;
+      outline-offset: -2px;
+      cursor: move;
+    }
+
+    .overlay-inner-resize {
+      display: none;
+      position: absolute;
+      right: -5px;
+      bottom: -5px;
+      width: 11px;
+      height: 11px;
+      border-radius: 3px;
+      background: #ffffff;
+      border: 2px solid #059669;
+      cursor: ew-resize;
+      z-index: 2;
+    }
+
+    .overlay-editor-box.editing-inner .overlay-inner-resize { display: block; }
+    .overlay-editor-box.editing-inner .overlay-editor-resize { display: none; }
+
+    .overlay-img-wrap img,
+    .overlay-editor-box img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .overlay-align-bottom .overlay-img-track { margin-top: auto; }
+    .overlay-align-left .overlay-img-track { width: fit-content; max-width: 100%; margin-right: auto; }
+    .overlay-align-right .overlay-img-track { width: fit-content; max-width: 100%; margin-left: auto; }
+    .overlay-align-left .overlay-img-track img,
+    .overlay-align-right .overlay-img-track img { width: auto; max-width: 100%; }
+
+    .overlay-img-wrap.overlay-align-top .overlay-img-track { animation: slideFromTop 0.22s cubic-bezier(0.22, 1, 0.36, 1); }
+    .overlay-img-wrap.overlay-align-bottom .overlay-img-track { animation: slideFromBottom 0.22s cubic-bezier(0.22, 1, 0.36, 1); }
+    .overlay-img-wrap.overlay-align-left .overlay-img-track { animation: slideFromLeft 0.22s cubic-bezier(0.22, 1, 0.36, 1); }
+    .overlay-img-wrap.overlay-align-right .overlay-img-track { animation: slideFromRight 0.22s cubic-bezier(0.22, 1, 0.36, 1); }
+
+    @keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideFromTop { from { transform: translateY(-100%); } to { transform: none; } }
+    @keyframes slideFromBottom { from { transform: translateY(100%); } to { transform: none; } }
+    @keyframes slideFromLeft { from { transform: translateX(-100%); } to { transform: none; } }
+    @keyframes slideFromRight { from { transform: translateX(100%); } to { transform: none; } }
+
+    .overlay-editor-box {
+      position: absolute;
+      z-index: 45;
+      outline: 2px dashed #7c3aed;
+      outline-offset: -2px;
+      border-radius: 6px;
+      cursor: move;
+      user-select: none;
+    }
+
+    .overlay-editor-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .overlay-editor-box.is-scrollable .overlay-editor-inner {
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .overlay-editor-box img { pointer-events: none; }
+
+    .overlay-editor-box img {
+      width: 100%;
+      height: auto;
+      display: block;
+      pointer-events: none;
+    }
+
+    .overlay-editor-tag {
+      position: absolute;
+      left: 0;
+      top: -20px;
+      background: #7c3aed;
+      color: #ffffff;
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .overlay-editor-resize {
+      position: absolute;
+      right: -5px;
+      bottom: -5px;
+      width: 11px;
+      height: 11px;
+      border-radius: 3px;
+      background: #ffffff;
+      border: 2px solid #7c3aed;
+      cursor: nwse-resize;
+    }
+
+    .overlay-imgs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      max-height: 132px;
+      overflow-y: auto;
+    }
+
+    .overlay-img-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 6px;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      background: #f9fafb;
+      font-size: 11px;
+      color: #374151;
+    }
+
+    .overlay-thumb {
+      width: 26px;
+      height: 26px;
+      border-radius: 4px;
+      border: 1px solid #e5e7eb;
+      object-fit: cover;
+      background: #ffffff;
+      flex-shrink: 0;
+    }
+
+    .overlay-scroll-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11.5px;
+      color: #374151;
+    }
+
+    .overlay-scroll-row label {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .overlay-height-input {
+      width: 64px;
+      height: 26px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      padding: 0 6px;
+      font-size: 11.5px;
+      text-align: center;
+      outline: none;
+    }
+
+    .overlay-height-input:focus { border-color: #7c3aed; }
 
     .modal-backdrop {
       position: fixed;
@@ -1131,14 +1341,80 @@
   <div class="hotspot-popover" id="hotspotPopover">
     <div class="hotspot-popover-title">热区设置</div>
     <div>
+      <label class="hotspot-popover-label" for="hotspotActionSelect">触发后动作</label>
+      <select id="hotspotActionSelect" class="hotspot-select">
+        <option value="jump">整屏切换视图</option>
+        <option value="overlay">局部叠加图片（不换整页）</option>
+      </select>
+    </div>
+    <div id="popJumpGroup">
       <label class="hotspot-popover-label" for="hotspotTargetSelect">跳转到</label>
       <select id="hotspotTargetSelect" class="hotspot-select"></select>
+    </div>
+    <div id="popOverlayGroup" style="display: none; flex-direction: column; gap: 8px;">
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+          <label class="hotspot-popover-label" style="margin-bottom: 0;">叠加图片（可多张竖向拼接）</label>
+          <button type="button" class="ly-btn" data-action="pop-add-overlay">＋ 添加图片</button>
+        </div>
+        <div id="overlayImgsList" class="overlay-imgs-list"></div>
+      </div>
+      <div class="overlay-scroll-row">
+        <label><input type="checkbox" id="overlayScrollCheck" /> 限制可视高度（可滚动）</label>
+        <input type="number" id="overlayHeightInput" class="overlay-height-input" min="40" max="736" value="240" title="可视区域高度（px）" style="display: none;" />
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+        <div>
+          <label class="hotspot-popover-label" for="overlayBgSelect">背景颜色</label>
+          <div style="display: flex; gap: 4px; align-items: center;">
+            <select id="overlayBgSelect" class="hotspot-select" style="flex: 1; min-width: 0;">
+              <option value="transparent">透明</option>
+              <option value="#ffffff">纯白</option>
+              <option value="#f7f8fa">浅灰</option>
+              <option value="rgba(15,23,42,0.75)">半透黑</option>
+              <option value="custom">自定义</option>
+            </select>
+            <input type="color" id="overlayBgColor" value="#ffffff" style="display: none; width: 28px; height: 28px; padding: 0; border: 1px solid #d1d5db; border-radius: 6px; cursor: pointer; background: none;" />
+          </div>
+        </div>
+        <div>
+          <label class="hotspot-popover-label" for="overlayShadowSelect">投影</label>
+          <select id="overlayShadowSelect" class="hotspot-select">
+            <option value="soft">柔和投影</option>
+            <option value="light">轻微投影</option>
+            <option value="strong">深色投影</option>
+            <option value="none">无投影</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="hotspot-popover-label" for="overlayAlignSelect">内部图片方位与滑入效果</label>
+        <select id="overlayAlignSelect" class="hotspot-select">
+          <option value="none">默认（原位显示）</option>
+          <option value="top">顶部 · 下拉滑入</option>
+          <option value="bottom">底部 · 上拉滑入</option>
+          <option value="left">左侧 · 左侧滑入</option>
+          <option value="right">右侧 · 右侧滑入</option>
+        </select>
+      </div>
+      <div style="display: flex; gap: 6px;">
+        <button type="button" id="overlayEditInnerBtn" class="btn" style="flex: 1; padding: 5px 8px; font-size: 11.5px;" data-action="ov-toggle-inner">拖动内部图片位置</button>
+        <button type="button" class="btn" style="padding: 5px 8px; font-size: 11.5px;" data-action="ov-reset-inner" title="恢复内部图片默认位置和宽度">复位</button>
+      </div>
+      <div>
+        <label class="hotspot-popover-label" for="overlayCloseSelect">关闭方式</label>
+        <select id="overlayCloseSelect" class="hotspot-select">
+          <option value="toggle">再次点击或点空白处关闭</option>
+          <option value="leave">鼠标移出热区/浮层时关闭</option>
+        </select>
+      </div>
+      <div class="hotspot-popover-tip" id="overlayPosTip" style="display: none;">紫色虚线框已显示在手机内，可拖动位置，拖右下角调整范围大小。</div>
     </div>
     <div>
       <label class="hotspot-popover-label" for="hotspotTriggerSelect">触发方式</label>
       <select id="hotspotTriggerSelect" class="hotspot-select">
         <option value="click">点击触发（默认）</option>
-        <option value="hover">悬停触发（鼠标移入即跳转）</option>
+        <option value="hover">悬停触发（鼠标移入即触发）</option>
       </select>
     </div>
     <div>
@@ -1296,6 +1572,7 @@
     const titleEl = $('#boardTitle');
     const IS_EXPORTED = document.body.classList.contains('exported-view');
     const DEVICE_W = 340;
+    const DEVICE_H = 736;
     const BACK_ID = '__back__';
     const SECTION_SEL = '.chat-body, .ai-toolbar, .composer';
     const MODE_BAR_SEL = '.body-mode-bar, .section-mode-bar, .composer-mode-bar';
@@ -1452,12 +1729,14 @@
     }
 
     function navReset(device) {
+      clearOverlays(device);
       if (!getStack(device).length && !device.querySelector(':scope > .nav-screen')) return;
       navStacks.set(device, []);
       renderNav(device);
     }
 
     function renderNav(device) {
+      clearOverlays(device);
       device.querySelectorAll(':scope > .nav-screen').forEach((n) => n.remove());
       const stack = getStack(device);
       let src = null;
@@ -1487,6 +1766,149 @@
       device._hintTimer = setTimeout(() => device.classList.remove('hint-hotspots'), 650);
     }
 
+    /* ---------- 局部叠加图片（Overlay） ---------- */
+    const activeOverlays = new WeakMap();
+
+    function clearOverlays(device) {
+      if (!device) return;
+      device.querySelectorAll(':scope > .overlay-layer').forEach((el) => el.remove());
+      activeOverlays.delete(device);
+    }
+
+    function triggerHotspotAction(device, box, isHover) {
+      if (!device || !box) return;
+      if (box.dataset.actionType === 'overlay') {
+        showOverlayForHotspot(device, box, isHover);
+      } else {
+        navigate(device, box.dataset.targetId);
+      }
+    }
+
+    function getOverlayImages(box) {
+      if (!box) return [];
+      const raw = box.dataset.overlaySrcs;
+      if (raw) {
+        try {
+          const arr = JSON.parse(raw);
+          if (Array.isArray(arr)) return arr.filter(Boolean);
+        } catch (err) { /* ignore */ }
+      }
+      return box.dataset.overlaySrc ? [box.dataset.overlaySrc] : [];
+    }
+
+    function setOverlayImages(box, srcs) {
+      if (!box) return;
+      const list = (srcs || []).filter(Boolean);
+      if (!list.length) {
+        box.removeAttribute('data-overlay-src');
+        box.removeAttribute('data-overlay-srcs');
+      } else if (list.length === 1) {
+        box.dataset.overlaySrc = list[0];
+        box.removeAttribute('data-overlay-srcs');
+      } else {
+        box.dataset.overlaySrc = list[0];
+        box.dataset.overlaySrcs = JSON.stringify(list);
+      }
+    }
+
+    const OVERLAY_SHADOWS = {
+      none: 'none',
+      light: '0 2px 10px rgba(15, 23, 42, 0.10)',
+      soft: '0 8px 24px rgba(15, 23, 42, 0.18)',
+      strong: '0 12px 32px rgba(15, 23, 42, 0.32)'
+    };
+
+    function numAttr(v, fallback) {
+      const n = parseFloat(v);
+      return Number.isFinite(n) ? n : fallback;
+    }
+
+    function applyInnerTrackStyle(track, box) {
+      if (!track || !box) return;
+      const ix = numAttr(box.dataset.overlayInnerX, 0);
+      const iy = numAttr(box.dataset.overlayInnerY, 0);
+      const iw = numAttr(box.dataset.overlayInnerW, 0);
+      if (ix) track.style.left = `${ix}px`;
+      if (iy) track.style.top = `${iy}px`;
+      if (iw > 0) {
+        track.style.width = `${iw}px`;
+        track.querySelectorAll('img').forEach((img) => { img.style.width = '100%'; });
+      }
+    }
+
+    function applyOverlayStyle(el, box) {
+      const bg = box.dataset.overlayBg || (box.dataset.overlayScroll === '1' ? '#ffffff' : 'transparent');
+      const sh = box.dataset.overlayShadow || 'soft';
+      el.style.backgroundColor = bg;
+      el.style.boxShadow = OVERLAY_SHADOWS[sh] || OVERLAY_SHADOWS.soft;
+    }
+
+    function showOverlayForHotspot(device, box, isHover) {
+      const srcs = getOverlayImages(box);
+      if (!srcs.length) {
+        if (!isHover) toast('该热区尚未选择叠加图片');
+        return;
+      }
+      const cur = activeOverlays.get(device);
+      if (cur && cur.box === box) {
+        if (!isHover && box.dataset.overlayClose !== 'leave') clearOverlays(device);
+        return;
+      }
+      clearOverlays(device);
+
+      const layer = document.createElement('div');
+      layer.className = 'overlay-layer';
+
+      const closeMode = box.dataset.overlayClose || 'toggle';
+      if (closeMode === 'toggle') {
+        const backdrop = document.createElement('div');
+        backdrop.className = 'overlay-backdrop';
+        backdrop.addEventListener('click', (ev) => {
+          ev.stopPropagation();
+          clearOverlays(device);
+        });
+        layer.appendChild(backdrop);
+      }
+
+      const scrollable = box.dataset.overlayScroll === '1';
+      const align = box.dataset.overlayAlign || 'none';
+      const alignCls = align !== 'none' ? ` overlay-align-${align}` : '';
+      const wrap = document.createElement('div');
+      wrap.className = 'overlay-img-wrap' + (scrollable ? ' is-scrollable' : '') + alignCls;
+      wrap.style.left = `${numAttr(box.dataset.overlayLeft, 20)}px`;
+      wrap.style.top = `${numAttr(box.dataset.overlayTop, 120)}px`;
+      wrap.style.width = `${numAttr(box.dataset.overlayWidth, 240)}px`;
+      if (scrollable) wrap.style.height = `${numAttr(box.dataset.overlayHeight, 240)}px`;
+      applyOverlayStyle(wrap, box);
+      wrap.innerHTML = `<div class="overlay-img-track">${srcs.map((s) => `<img src="${s}" alt="局部浮层" draggable="false" />`).join('')}</div>`;
+      applyInnerTrackStyle(wrap.querySelector('.overlay-img-track'), box);
+      wrap.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        if (closeMode === 'toggle' && !scrollable) clearOverlays(device);
+      });
+
+      layer.appendChild(wrap);
+      device.appendChild(layer);
+
+      let leaveTimer = null;
+      const state = { box, layer, wrap, cancelLeave: () => { clearTimeout(leaveTimer); } };
+      activeOverlays.set(device, state);
+
+      if (closeMode === 'leave') {
+        const scheduleLeave = () => {
+          clearTimeout(leaveTimer);
+          leaveTimer = setTimeout(() => {
+            if (activeOverlays.get(device) === state) clearOverlays(device);
+          }, 90);
+        };
+        const cancelLeave = () => clearTimeout(leaveTimer);
+        wrap.addEventListener('mouseenter', cancelLeave);
+        wrap.addEventListener('mouseleave', scheduleLeave);
+        box.addEventListener('mouseenter', cancelLeave, { once: false });
+        box.addEventListener('mouseleave', scheduleLeave, { once: true });
+      }
+    }
+
     /* ---------- 热区 ---------- */
     function ensureLayer(dc) {
       let layer = dc.querySelector(':scope > .hotspot-layer');
@@ -1498,7 +1920,7 @@
       return layer;
     }
 
-    function createHotspot(dc, { left, top, width, height, target = '', label = '', trigger = 'click' }) {
+    function createHotspot(dc, { left, top, width, height, target = '', label = '', trigger = 'click', actionType = 'jump', overlaySrc = '', overlaySrcs = null, overlayLeft = 20, overlayTop = 120, overlayWidth = 240, overlayHeight = 240, overlayScroll = false, overlayBg = '', overlayShadow = 'soft', overlayAlign = 'none', overlayInnerX = 0, overlayInnerY = 0, overlayInnerW = 0, overlayClose = 'toggle' }) {
       const layer = ensureLayer(dc);
       const box = document.createElement('div');
       box.className = 'hotspot-box';
@@ -1509,6 +1931,23 @@
       box.dataset.targetId = target;
       box.dataset.label = label;
       if (trigger === 'hover') box.dataset.trigger = 'hover';
+      if (actionType === 'overlay') {
+        box.dataset.actionType = 'overlay';
+        const list = Array.isArray(overlaySrcs) && overlaySrcs.length ? overlaySrcs : (overlaySrc ? [overlaySrc] : []);
+        setOverlayImages(box, list);
+        box.dataset.overlayLeft = String(overlayLeft);
+        box.dataset.overlayTop = String(overlayTop);
+        box.dataset.overlayWidth = String(overlayWidth);
+        box.dataset.overlayHeight = String(overlayHeight);
+        if (overlayScroll) box.dataset.overlayScroll = '1';
+        if (overlayBg) box.dataset.overlayBg = overlayBg;
+        if (overlayShadow) box.dataset.overlayShadow = overlayShadow;
+        if (overlayAlign && overlayAlign !== 'none') box.dataset.overlayAlign = overlayAlign;
+        if (overlayInnerX) box.dataset.overlayInnerX = String(overlayInnerX);
+        if (overlayInnerY) box.dataset.overlayInnerY = String(overlayInnerY);
+        if (overlayInnerW > 0) box.dataset.overlayInnerW = String(overlayInnerW);
+        box.dataset.overlayClose = overlayClose;
+      }
       box.innerHTML = '<span class="hotspot-tag"></span><div class="hotspot-actions"><button type="button" class="hotspot-mini-btn" data-action="hs-edit">目标</button><button type="button" class="hotspot-mini-btn del" data-action="hs-del">×</button></div><span class="hotspot-resize-handle" title="拖动调整大小"></span>';
       layer.appendChild(box);
       updateTag(box);
@@ -1523,7 +1962,12 @@
       const prefix = box.dataset.trigger === 'hover' ? '[悬停] ' : '';
       let text;
       let state = '';
-      if (!t) { text = prefix + (label || '未设置跳转目标'); state = 'is-unset'; }
+      if (box.dataset.actionType === 'overlay') {
+        const imgs = getOverlayImages(box);
+        const scrollTag = box.dataset.overlayScroll === '1' ? '滚动' : '叠加';
+        if (!imgs.length) { text = prefix + (label || '未选择叠加图片'); state = 'is-unset'; }
+        else text = prefix + (label ? `${scrollTag}: ${label}` : `${scrollTag} ${imgs.length > 1 ? imgs.length + '张图' : '图片'}`);
+      } else if (!t) { text = prefix + (label || '未设置跳转目标'); state = 'is-unset'; }
       else if (t === BACK_ID) { text = prefix + (label || '← 返回上一页'); }
       else {
         const v = findView(t, views);
@@ -1578,7 +2022,27 @@
     }
 
     function copyHotspot(box) {
-      hsClipboard = { ...hotspotRect(box), target: box.dataset.targetId || '', label: box.dataset.label || '', trigger: box.dataset.trigger || 'click', srcDc: box.closest('.dom-content') };
+      hsClipboard = {
+        ...hotspotRect(box),
+        target: box.dataset.targetId || '',
+        label: box.dataset.label || '',
+        trigger: box.dataset.trigger || 'click',
+        actionType: box.dataset.actionType || 'jump',
+        overlaySrcs: getOverlayImages(box),
+        overlayLeft: numAttr(box.dataset.overlayLeft, 20),
+        overlayTop: numAttr(box.dataset.overlayTop, 120),
+        overlayWidth: numAttr(box.dataset.overlayWidth, 240),
+        overlayHeight: numAttr(box.dataset.overlayHeight, 240),
+        overlayScroll: box.dataset.overlayScroll === '1',
+        overlayBg: box.dataset.overlayBg || '',
+        overlayShadow: box.dataset.overlayShadow || 'soft',
+        overlayAlign: box.dataset.overlayAlign || 'none',
+        overlayInnerX: numAttr(box.dataset.overlayInnerX, 0),
+        overlayInnerY: numAttr(box.dataset.overlayInnerY, 0),
+        overlayInnerW: numAttr(box.dataset.overlayInnerW, 0),
+        overlayClose: box.dataset.overlayClose || 'toggle',
+        srcDc: box.closest('.dom-content')
+      };
     }
 
     function pasteHotspot(intoDc) {
@@ -1617,9 +2081,190 @@
 
     /* 热区配置浮窗 */
     const popEl = $('#hotspotPopover');
+    const popAction = $('#hotspotActionSelect');
+    const popJumpGroup = $('#popJumpGroup');
+    const popOverlayGroup = $('#popOverlayGroup');
     const popSelect = $('#hotspotTargetSelect');
     const popTrigger = $('#hotspotTriggerSelect');
+    const popOverlayClose = $('#overlayCloseSelect');
+    const popOverlayImgsList = $('#overlayImgsList');
+    const popOverlayScroll = $('#overlayScrollCheck');
+    const popOverlayHeight = $('#overlayHeightInput');
+    const popOverlayBg = $('#overlayBgSelect');
+    const popOverlayBgColor = $('#overlayBgColor');
+    const popOverlayShadow = $('#overlayShadowSelect');
+    const popOverlayAlign = $('#overlayAlignSelect');
+    const popOverlayInnerBtn = $('#overlayEditInnerBtn');
+    const popOverlayTip = $('#overlayPosTip');
     const popLabel = $('#hotspotLabelInput');
+    let overlayEditorEl = null;
+    let editingOverlayInner = false;
+
+    function removeOverlayEditor() {
+      if (overlayEditorEl) { overlayEditorEl.remove(); overlayEditorEl = null; }
+    }
+
+    function syncOverlayEditor(box) {
+      removeOverlayEditor();
+      const srcs = getOverlayImages(box);
+      if (!box || isViewing() || box.dataset.actionType !== 'overlay' || !srcs.length) {
+        if (popOverlayTip) popOverlayTip.style.display = 'none';
+        return;
+      }
+      const device = box.closest('.device');
+      if (!device) return;
+      if (popOverlayTip) popOverlayTip.style.display = 'block';
+
+      const scrollable = box.dataset.overlayScroll === '1';
+      const align = box.dataset.overlayAlign || 'none';
+      const alignCls = align !== 'none' ? ` overlay-align-${align}` : '';
+      const ed = document.createElement('div');
+      ed.className = 'overlay-editor-box' + (scrollable ? ' is-scrollable' : '') + (editingOverlayInner ? ' editing-inner' : '') + alignCls;
+      ed.style.left = `${numAttr(box.dataset.overlayLeft, 20)}px`;
+      ed.style.top = `${numAttr(box.dataset.overlayTop, 120)}px`;
+      ed.style.width = `${numAttr(box.dataset.overlayWidth, 240)}px`;
+      if (scrollable) ed.style.height = `${numAttr(box.dataset.overlayHeight, 240)}px`;
+      applyOverlayStyle(ed, box);
+      ed.innerHTML =
+        `<span class="overlay-editor-tag">${editingOverlayInner ? '绿色虚线：拖动内部图片 / 调宽度' : (scrollable ? '可视滚动区（可拖动/调宽高）' : '叠加图片位置（可拖动/调宽度）')}</span>` +
+        `<div class="overlay-editor-inner"><div class="overlay-img-track">${srcs.map((s) => `<img src="${s}" alt="" draggable="false" />`).join('')}<span class="overlay-inner-resize" title="拖动调整内部图片宽度"></span></div></div>` +
+        `<span class="overlay-editor-resize" title="拖动调整大小"></span>`;
+      const track = ed.querySelector('.overlay-img-track');
+      applyInnerTrackStyle(track, box);
+      device.appendChild(ed);
+      overlayEditorEl = ed;
+
+      ed.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return;
+        const isInnerResize = !!e.target.closest('.overlay-inner-resize');
+        const isResize = !!e.target.closest('.overlay-editor-resize');
+        if (scrollable && !isResize && !isInnerResize && e.offsetX > ed.clientWidth - 12) return;
+        e.preventDefault();
+        e.stopPropagation();
+        const scale = getScale(device);
+        const sx = e.clientX;
+        const sy = e.clientY;
+        interacting = true;
+
+        if (editingOverlayInner) {
+          const ix0 = numAttr(box.dataset.overlayInnerX, 0);
+          const iy0 = numAttr(box.dataset.overlayInnerY, 0);
+          const iw0 = numAttr(box.dataset.overlayInnerW, 0) || track.offsetWidth || 120;
+          const move = (ev) => {
+            const dx = (ev.clientX - sx) / scale;
+            const dy = (ev.clientY - sy) / scale;
+            if (isInnerResize) {
+              const nw = Math.round(Math.max(24, iw0 + dx));
+              track.style.width = `${nw}px`;
+              track.querySelectorAll('img').forEach((img) => { img.style.width = '100%'; });
+              box.dataset.overlayInnerW = String(nw);
+            } else {
+              const nx = Math.round(ix0 + dx);
+              const ny = Math.round(iy0 + dy);
+              track.style.left = `${nx}px`;
+              track.style.top = `${ny}px`;
+              box.dataset.overlayInnerX = String(nx);
+              box.dataset.overlayInnerY = String(ny);
+            }
+          };
+          const up = () => {
+            document.removeEventListener('mousemove', move);
+            document.removeEventListener('mouseup', up);
+            interacting = false;
+            scheduleCapture();
+          };
+          document.addEventListener('mousemove', move);
+          document.addEventListener('mouseup', up);
+          return;
+        }
+
+        const ol = parseFloat(ed.style.left) || 0;
+        const ot = parseFloat(ed.style.top) || 0;
+        const ow = parseFloat(ed.style.width) || 240;
+        const oh = parseFloat(ed.style.height) || ed.offsetHeight || 240;
+
+        const move = (ev) => {
+          const dx = (ev.clientX - sx) / scale;
+          const dy = (ev.clientY - sy) / scale;
+          if (isResize) {
+            const nw = Math.round(clamp(ow + dx, 30, DEVICE_W - ol));
+            ed.style.width = `${nw}px`;
+            box.dataset.overlayWidth = String(nw);
+            if (scrollable) {
+              const nh = Math.round(clamp(oh + dy, 40, DEVICE_H - ot));
+              ed.style.height = `${nh}px`;
+              box.dataset.overlayHeight = String(nh);
+              if (popOverlayHeight) popOverlayHeight.value = String(nh);
+            }
+          } else {
+            const nl = Math.round(clamp(ol + dx, 0, DEVICE_W - ow));
+            const nt = Math.round(clamp(ot + dy, 0, DEVICE_H - 24));
+            ed.style.left = `${nl}px`;
+            ed.style.top = `${nt}px`;
+            box.dataset.overlayLeft = String(nl);
+            box.dataset.overlayTop = String(nt);
+          }
+        };
+        const up = () => {
+          document.removeEventListener('mousemove', move);
+          document.removeEventListener('mouseup', up);
+          interacting = false;
+          scheduleCapture();
+        };
+        document.addEventListener('mousemove', move);
+        document.addEventListener('mouseup', up);
+      });
+    }
+
+    function renderOverlayImgsList(box) {
+      if (!popOverlayImgsList) return;
+      const srcs = getOverlayImages(box);
+      if (!srcs.length) {
+        popOverlayImgsList.innerHTML = '<div style="font-size:11px;color:#9ca3af;padding:4px 0;">暂未添加图片，点右上角「＋ 添加图片」</div>';
+        return;
+      }
+      popOverlayImgsList.innerHTML = srcs.map((s, i) => `
+        <div class="overlay-img-item">
+          <img class="overlay-thumb" src="${s}" alt="" />
+          <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">图片 ${i + 1}</span>
+          <button type="button" class="ly-btn" data-action="ov-img-cut" data-idx="${i}">换</button>
+          <button type="button" class="ly-btn" data-action="ov-img-up" data-idx="${i}" ${i === 0 ? 'disabled' : ''}>↑</button>
+          <button type="button" class="ly-btn" data-action="ov-img-down" data-idx="${i}" ${i === srcs.length - 1 ? 'disabled' : ''}>↓</button>
+          <button type="button" class="ly-btn del" data-action="ov-img-del" data-idx="${i}">✕</button>
+        </div>
+      `).join('');
+    }
+
+    function syncPopoverMode(box) {
+      const isOverlay = box.dataset.actionType === 'overlay';
+      if (popAction) popAction.value = isOverlay ? 'overlay' : 'jump';
+      if (popJumpGroup) popJumpGroup.style.display = isOverlay ? 'none' : 'block';
+      if (popOverlayGroup) popOverlayGroup.style.display = isOverlay ? 'flex' : 'none';
+      const scrollable = box.dataset.overlayScroll === '1';
+      if (popOverlayScroll) popOverlayScroll.checked = scrollable;
+      if (popOverlayHeight) {
+        popOverlayHeight.style.display = scrollable ? 'block' : 'none';
+        popOverlayHeight.value = String(numAttr(box.dataset.overlayHeight, 240));
+      }
+      const bg = box.dataset.overlayBg || (scrollable ? '#ffffff' : 'transparent');
+      if (popOverlayBg) {
+        const isPreset = ['transparent', '#ffffff', '#f7f8fa', 'rgba(15,23,42,0.75)'].includes(bg);
+        popOverlayBg.value = isPreset ? bg : 'custom';
+        if (popOverlayBgColor) {
+          popOverlayBgColor.style.display = isPreset ? 'none' : 'block';
+          if (!isPreset) popOverlayBgColor.value = /^#[0-9a-f]{6}$/i.test(bg) ? bg : '#ffffff';
+        }
+      }
+      if (popOverlayShadow) popOverlayShadow.value = box.dataset.overlayShadow || 'soft';
+      if (popOverlayAlign) popOverlayAlign.value = box.dataset.overlayAlign || 'none';
+      if (popOverlayInnerBtn) {
+        popOverlayInnerBtn.classList.toggle('active-mode', editingOverlayInner);
+        popOverlayInnerBtn.textContent = editingOverlayInner ? '正在拖动内部图片（点此完成）' : '拖动内部图片位置';
+      }
+      if (popOverlayClose) popOverlayClose.value = box.dataset.overlayClose === 'leave' ? 'leave' : 'toggle';
+      if (isOverlay) renderOverlayImgsList(box);
+      syncOverlayEditor(box);
+    }
 
     function openPopover(box) {
       if (!box || isViewing() || !popEl) return;
@@ -1636,23 +2281,107 @@
       if (popSelect.value !== (box.dataset.targetId || '')) popSelect.value = '';
       if (popTrigger) popTrigger.value = box.dataset.trigger === 'hover' ? 'hover' : 'click';
       popLabel.value = box.dataset.label || '';
+      syncPopoverMode(box);
 
       popEl.classList.add('open');
       const r = box.getBoundingClientRect();
       const pw = popEl.offsetWidth || 272;
-      const ph = popEl.offsetHeight || 220;
+      const ph = popEl.offsetHeight || 280;
       let left = r.right + 12;
       if (left + pw > window.innerWidth - 12) left = r.left - pw - 12;
       if (left < 12) left = clamp(r.left, 12, window.innerWidth - pw - 12);
       const top = clamp(r.top, 12, window.innerHeight - ph - 12);
       popEl.style.left = `${left}px`;
       popEl.style.top = `${top}px`;
-      setTimeout(() => popSelect.focus(), 0);
+      setTimeout(() => (box.dataset.actionType === 'overlay' ? popAction : popSelect).focus(), 0);
     }
 
     function closePopover() {
       if (popEl) popEl.classList.remove('open');
+      editingOverlayInner = false;
+      removeOverlayEditor();
       popBox = null;
+    }
+
+    if (popAction) {
+      popAction.addEventListener('change', () => {
+        if (!popBox) return;
+        if (popAction.value === 'overlay') {
+          popBox.dataset.actionType = 'overlay';
+          if (!popBox.dataset.overlayLeft) popBox.dataset.overlayLeft = '20';
+          if (!popBox.dataset.overlayTop) popBox.dataset.overlayTop = '120';
+          if (!popBox.dataset.overlayWidth) popBox.dataset.overlayWidth = '240';
+          if (!popBox.dataset.overlayClose) popBox.dataset.overlayClose = 'toggle';
+        } else {
+          popBox.removeAttribute('data-action-type');
+        }
+        syncPopoverMode(popBox);
+        updateTag(popBox);
+      });
+    }
+    if (popOverlayClose) {
+      popOverlayClose.addEventListener('change', () => {
+        if (!popBox) return;
+        popBox.dataset.overlayClose = popOverlayClose.value;
+      });
+    }
+    if (popOverlayScroll) {
+      popOverlayScroll.addEventListener('change', () => {
+        if (!popBox) return;
+        if (popOverlayScroll.checked) {
+          popBox.dataset.overlayScroll = '1';
+          if (!popBox.dataset.overlayHeight) popBox.dataset.overlayHeight = '240';
+        } else {
+          popBox.removeAttribute('data-overlay-scroll');
+        }
+        syncPopoverMode(popBox);
+        updateTag(popBox);
+      });
+    }
+    if (popOverlayHeight) {
+      popOverlayHeight.addEventListener('input', () => {
+        if (!popBox) return;
+        const h = Math.round(clamp(parseFloat(popOverlayHeight.value) || 240, 40, DEVICE_H));
+        popBox.dataset.overlayHeight = String(h);
+        if (overlayEditorEl && popBox.dataset.overlayScroll === '1') overlayEditorEl.style.height = `${h}px`;
+      });
+    }
+    if (popOverlayBg) {
+      popOverlayBg.addEventListener('change', () => {
+        if (!popBox) return;
+        if (popOverlayBg.value === 'custom') {
+          if (popOverlayBgColor) {
+            popOverlayBgColor.style.display = 'block';
+            popBox.dataset.overlayBg = popOverlayBgColor.value;
+          }
+        } else {
+          if (popOverlayBgColor) popOverlayBgColor.style.display = 'none';
+          popBox.dataset.overlayBg = popOverlayBg.value;
+        }
+        if (overlayEditorEl) applyOverlayStyle(overlayEditorEl, popBox);
+      });
+    }
+    if (popOverlayBgColor) {
+      popOverlayBgColor.addEventListener('input', () => {
+        if (!popBox) return;
+        popBox.dataset.overlayBg = popOverlayBgColor.value;
+        if (overlayEditorEl) applyOverlayStyle(overlayEditorEl, popBox);
+      });
+    }
+    if (popOverlayShadow) {
+      popOverlayShadow.addEventListener('change', () => {
+        if (!popBox) return;
+        popBox.dataset.overlayShadow = popOverlayShadow.value;
+        if (overlayEditorEl) applyOverlayStyle(overlayEditorEl, popBox);
+      });
+    }
+    if (popOverlayAlign) {
+      popOverlayAlign.addEventListener('change', () => {
+        if (!popBox) return;
+        if (popOverlayAlign.value === 'none') popBox.removeAttribute('data-overlay-align');
+        else popBox.dataset.overlayAlign = popOverlayAlign.value;
+        syncOverlayEditor(popBox);
+      });
     }
 
     if (popSelect) {
@@ -2326,11 +3055,11 @@
     function fitDemo() {
       if (!isDemoOpen()) return;
       const side = window.innerWidth > 768 ? 220 : 0;
-      const s = Math.min(1.25, (window.innerHeight - 130) / 734, (window.innerWidth - side - 60) / 364);
+      const s = Math.min(1.25, (window.innerHeight - 130) / (DEVICE_H + 24), (window.innerWidth - side - 60) / (DEVICE_W + 24));
       const scale = Math.max(0.3, s);
       $('#demoScale').style.transform = `scale(${scale})`;
-      $('#demoFit').style.width = `${360 * scale}px`;
-      $('#demoFit').style.height = `${730 * scale}px`;
+      $('#demoFit').style.width = `${(DEVICE_W + 20) * scale}px`;
+      $('#demoFit').style.height = `${(DEVICE_H + 20) * scale}px`;
     }
 
     window.addEventListener('resize', fitDemo);
@@ -2380,7 +3109,7 @@
     function detokenize(s) { return s.replace(TOKEN_RE, (m, id) => idToUrl.get(id) || ''); }
 
     function cleanGridClone(root) {
-      root.querySelectorAll('.nav-screen').forEach((n) => n.remove());
+      root.querySelectorAll('.nav-screen, .overlay-layer, .overlay-editor-box').forEach((n) => n.remove());
       TRANSIENT_CLASSES.forEach((c) => root.querySelectorAll('.' + c).forEach((el) => el.classList.remove(c)));
       root.querySelectorAll('[class=""]').forEach((el) => el.removeAttribute('class'));
     }
@@ -2676,6 +3405,49 @@
         case 'modal-confirm': createViewFromModal(); break;
         case 'hs-edit': openPopover(el.closest('.hotspot-box')); break;
         case 'hs-del': deleteHotspot(el.closest('.hotspot-box')); break;
+        case 'ov-toggle-inner':
+          if (popBox) {
+            editingOverlayInner = !editingOverlayInner;
+            syncPopoverMode(popBox);
+          }
+          break;
+        case 'ov-reset-inner':
+          if (popBox) {
+            popBox.removeAttribute('data-overlay-inner-x');
+            popBox.removeAttribute('data-overlay-inner-y');
+            popBox.removeAttribute('data-overlay-inner-w');
+            syncPopoverMode(popBox);
+          }
+          break;
+        case 'pop-add-overlay':
+          if (popBox) pickImages(true, async (files) => {
+            const added = await readSorted(files);
+            setOverlayImages(popBox, getOverlayImages(popBox).concat(added));
+            syncPopoverMode(popBox);
+            updateTag(popBox);
+          });
+          break;
+        case 'ov-img-cut': case 'ov-img-up': case 'ov-img-down': case 'ov-img-del': {
+          if (!popBox) break;
+          const idx = parseInt(el.dataset.idx, 10);
+          const list = getOverlayImages(popBox);
+          if (action === 'ov-img-cut') {
+            pickImages(false, async (files) => {
+              list[idx] = await readImage(files[0]);
+              setOverlayImages(popBox, list);
+              syncPopoverMode(popBox);
+              updateTag(popBox);
+            });
+          } else {
+            if (action === 'ov-img-up' && idx > 0) { const t = list[idx - 1]; list[idx - 1] = list[idx]; list[idx] = t; }
+            else if (action === 'ov-img-down' && idx < list.length - 1) { const t = list[idx + 1]; list[idx + 1] = list[idx]; list[idx] = t; }
+            else if (action === 'ov-img-del') list.splice(idx, 1);
+            setOverlayImages(popBox, list);
+            syncPopoverMode(popBox);
+            updateTag(popBox);
+          }
+          break;
+        }
         case 'pop-delete': deleteHotspot(popBox); break;
         case 'pop-close': closePopover(); break;
         case 'view-refresh': if (card) refreshView(card); break;
@@ -2720,7 +3492,7 @@
         if (device && (isViewing() || device.id === 'demoDevice' || box.closest('.nav-screen'))) {
           e.preventDefault();
           e.stopPropagation();
-          navigate(device, box.dataset.targetId);
+          triggerHotspotAction(device, box, false);
           return;
         }
       }
@@ -2743,7 +3515,7 @@
         if (device._hoverLock) return;
         device._hoverLock = true;
         setTimeout(() => { device._hoverLock = false; }, 180);
-        navigate(device, box.dataset.targetId);
+        triggerHotspotAction(device, box, true);
       }
     });
 
@@ -2752,9 +3524,9 @@
       document.addEventListener('mousedown', (e) => {
         const t = e.target;
         if (!(t instanceof Element)) return;
-        if (popBox && !t.closest('#hotspotPopover') && !popBox.contains(t)) closePopover();
+        if (popBox && !t.closest('#hotspotPopover') && !t.closest('.overlay-editor-box') && !popBox.contains(t)) closePopover();
         if (layerBody && !t.closest('#layerPanel') && !t.closest('[data-action="sec-layers"]')) closeLayerPanel();
-        if (!t.closest('.hotspot-box, #hotspotPopover, .floating-toolbar, .toast')) deselect();
+        if (!t.closest('.hotspot-box, #hotspotPopover, .overlay-editor-box, .floating-toolbar, .toast')) deselect();
       }, true);
 
       /* 画热区 / 拖动热区 */
